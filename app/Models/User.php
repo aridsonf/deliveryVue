@@ -63,4 +63,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Orders::class, 'fk_user');
     }
+
+    public function latestOrder()
+    {
+        return $this->hasOne(Order::class, 'fk_user')->latestOfMany();
+    }
+
+    public function oldestOrder()
+    {
+        return $this->hasOne(Order::class, 'fk_user')->oldestOfMany();
+    }
 }
