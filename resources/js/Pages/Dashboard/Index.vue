@@ -18,7 +18,6 @@
                     <ShoppingCartIcon class="h-5 w-5 text-dark-500"/>&nbsp;Cart
                 </button>
             </div>
-            
         </div>
     </div>
 </template>

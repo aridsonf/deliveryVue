@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Products;
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
@@ -15,7 +16,9 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        //
+        $products = Products::all();
+
+        return Inertia::render('Products/Index', compact('products'));
     }
 
     /**
