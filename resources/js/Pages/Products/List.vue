@@ -7,7 +7,7 @@
                 </div>
 
                 <div class="">
-                    <button class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-full">
+                    <button @click="modal()" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded-full">
                         <PlusIcon class="h-5 w-5 text-dark-500"/>
                     </button> 
                 </div>
@@ -35,21 +35,43 @@
             </table>
         </div>
     </div>
+
+    <Create :showModal="showModal" ></Create>
+
 </template>
 
 <script>
     import { defineComponent } from 'vue'
+
     import { 
         PlusIcon, 
         } from '@heroicons/vue/solid'
+
     import JetApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
-    // import Button from '@/Jetstream/Button.vue'
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
+    import JetDangerButton from '@/Jetstream/SecondaryButton.vue'
+
+    import Create from '@/Pages/Products/Create'
 
     export default defineComponent({
         components: {
             JetApplicationLogo,
-            // Button,
+            JetSecondaryButton,
+            JetDangerButton,
             PlusIcon,
+            Create,
+        },
+
+        data(){
+            return {
+                showModal: false,
+            }
+        },
+
+        methods:{
+            modal(){
+                this.showModal = true;
+            }
         },
 
         props: ['products'],
