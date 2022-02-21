@@ -13,7 +13,7 @@ class UpdateProductsRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,23 @@ class UpdateProductsRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required',
+            'description' => 'required'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'required' => ':attribute is required'
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'name' => 'Name',
+            'description' => 'Description'
         ];
     }
 }
