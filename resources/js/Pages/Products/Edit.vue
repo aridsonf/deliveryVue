@@ -1,8 +1,8 @@
 <template>
-  <jet-dialog-modal :show="showModal" @close="$emit('closeModal')">
-        <template #title> New Product </template>
+  <jet-dialog-modal :show="showEdit" @close="$emit('closeEdit')">
+        <template #title> Edit Product </template>
         <template #content>
-            <form class="w-full max-w" @submit.prevent="form.post('/products')" id="productForm">
+            <form class="w-full max-w" @submit.prevent="submit" id="productForm">
                 <div role="alert" v-if="form.hasErrors">
                     <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
                         Error
@@ -23,7 +23,7 @@
                         Name
                         </label>
                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                        id="name" type="text" placeholder="name here..." v-model="form.name"/>
+                        id="name" type="text" placeholder="name here..." v-model="name"/>
                     </div>
                 </div>
                 <div class="flex flex-wrap -mx-3 mb-6">
@@ -32,19 +32,19 @@
                         Description
                         </label>
                         <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                        rows="4" id="description" placeholder="description here..." v-model="form.description"></textarea>
+                        rows="4" id="description" placeholder="description here..." v-model="description"></textarea>
                     </div>
                 </div>
             </form>
         </template>
 
         <template #footer>
-            <jet-secondary-button @click="$emit('closeModal')">
+            <jet-secondary-button @click="$emit('closeEdit')">
                 Cancel
             </jet-secondary-button>
 
             <jet-danger-button class="ml-2" :type="'submit'" form="productForm" :disabled="form.processing">
-            Create
+                Create
             </jet-danger-button>        
         </template>
     </jet-dialog-modal>
@@ -67,9 +67,16 @@ export default defineComponent({
         JetDialogModal,
     },
 
-    props: ["showModal"],
+    props: ["showEdit", "id", "name", "description"],
 
-    emits: ["closeModal"],
+    emits: ["closeEdit"],
+
+    data() {
+        return {
+            name: this.name,
+            description: this.description
+        };
+    },
 
     setup() {
         const form = useForm({
@@ -79,5 +86,13 @@ export default defineComponent({
 
         return { form };
     },
+
+    methods: {
+        submit() {
+            form.name = this.name;
+            form.description = this.description;
+            form.put('/products/'+id);
+        }
+    }
 });
 </script>

@@ -42,6 +42,7 @@
             <td class="border px-4 py-2">{{ product.description }}</td>
             <td class="border px-4 py-2 text-center">
               <button
+                @click="modalEdit(product.id, product.name, product.description)"
                 class="
                   bg-yellow-500
                   hover:bg-yellow-400
@@ -80,11 +81,19 @@
   </div>
 
   <Create :showModal="showModal" @close-modal="close()"></Create>
+  <Edit 
+    :showEdit="showEdit" 
+    :id="id" 
+    :name="name" 
+    :description="description" 
+    @close-edit="closeEdit()">
+  </Edit>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import { Inertia } from "@inertiajs/inertia";
+
 import { PlusIcon } from "@heroicons/vue/solid";
 import { TrashIcon } from "@heroicons/vue/solid";
 import { PencilIcon } from "@heroicons/vue/solid";
@@ -94,6 +103,7 @@ import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 import JetDangerButton from "@/Jetstream/SecondaryButton.vue";
 
 import Create from "@/Pages/Products/Create";
+import Edit from "@/Pages/Products/Edit";
 
 export default defineComponent({
   components: {
@@ -104,11 +114,16 @@ export default defineComponent({
     TrashIcon,
     PencilIcon,
     Create,
+    Edit
   },
 
   data() {
     return {
       showModal: false,
+      showEdit: false,
+      id: null,
+      name: null,
+      description: null
     };
   },
 
@@ -119,9 +134,18 @@ export default defineComponent({
     close() {
       this.showModal = false;
     },
+    closeEdit() {
+      this.showEdit = false;
+    },
+    modalEdit(id, name, description){
+      this.id = id
+      this.name = name,
+      this.description = description
+      this.showEdit = true;
+    },
     deleteProduct(id) {
       Inertia.delete(`/products/` + id, {
-        onBefore: () => confirm("Are you sure you want to delete this user?"),
+        onBefore: () => confirm("Are you sure you want to delete this product?"),
       });
     },
   },
