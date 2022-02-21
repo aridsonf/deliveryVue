@@ -29,10 +29,10 @@
       <table class="table-auto">
         <thead>
           <tr class="text-left">
-            <th class="w-1/8 px-4 py-2">#</th>
+            <th class="w-1/16 px-4 py-2">#</th>
             <th class="w-1/4 px-4 py-2">Name</th>
             <th class="w-1/2 px-4 py-2">Description</th>
-            <th class="w-1/4 px-4 py-2"></th>
+            <th class="w-1/16 px-4 py-2"></th>
           </tr>
         </thead>
         <tbody>
@@ -40,20 +40,54 @@
             <td class="border px-4 py-2">{{ product.id }}</td>
             <td class="border px-4 py-2">{{ product.name }}</td>
             <td class="border px-4 py-2">{{ product.description }}</td>
-            <td class="border px-4 py-2"></td>
+            <td class="border px-4 py-2 text-center">
+              <button
+                class="
+                  bg-yellow-500
+                  hover:bg-yellow-400
+                  text-white
+                  font-bold
+                  py-2
+                  px-4
+                  border-b-4 border-yellow-700
+                  hover:border-yellow-500
+                  rounded-full
+                "
+              >
+                <PencilIcon class="h-5 w-5 text-dark-500" />
+              </button>
+              <button
+                @click="deleteProduct(product.id)"
+                class="
+                  bg-red-500
+                  hover:bg-red-400
+                  text-white
+                  font-bold
+                  py-2
+                  px-4
+                  border-b-4 border-red-700
+                  hover:border-red-500
+                  rounded-full
+                "
+              >
+                <TrashIcon class="h-5 w-5 text-dark-500" />
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <Create :showModal="showModal"></Create>
+  <Create :showModal="showModal" @close-modal="close()"></Create>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-
+import { Inertia } from "@inertiajs/inertia";
 import { PlusIcon } from "@heroicons/vue/solid";
+import { TrashIcon } from "@heroicons/vue/solid";
+import { PencilIcon } from "@heroicons/vue/solid";
 
 import JetApplicationLogo from "@/Jetstream/ApplicationLogo.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
@@ -67,6 +101,8 @@ export default defineComponent({
     JetSecondaryButton,
     JetDangerButton,
     PlusIcon,
+    TrashIcon,
+    PencilIcon,
     Create,
   },
 
@@ -79,6 +115,14 @@ export default defineComponent({
   methods: {
     modal() {
       this.showModal = true;
+    },
+    close() {
+      this.showModal = false;
+    },
+    deleteProduct(id) {
+      Inertia.delete(`/products/` + id, {
+        onBefore: () => confirm("Are you sure you want to delete this user?"),
+      });
     },
   },
 

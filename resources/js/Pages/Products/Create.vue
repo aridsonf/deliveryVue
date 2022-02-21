@@ -1,8 +1,35 @@
 <template>
-  <jet-dialog-modal :show="showModal" @close="showModal = false">
+  <jet-dialog-modal :show="showModal" @close="$emit('closeModal')">
     <template #title> New Product </template>
     <template #content>
-      <form class="w-full max-w">
+      <form
+        class="w-full max-w"
+        @submit.prevent="form.post('/products')"
+        id="productForm"
+      >
+        <div role="alert" v-if="form.hasErrors">
+          <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+            Error
+          </div>
+          <div
+            class="
+              border border-t-0 border-red-400
+              rounded-b
+              bg-red-100
+              px-4
+              py-3
+              text-red-700
+            "
+          >
+            <div v-if="form.errors.name">
+              <p>{{ form.errors.name }}</p>
+            </div>
+            <div v-if="form.errors.description">
+              <p>{{ form.errors.description }}</p>
+            </div>
+          </div>
+        </div>
+        <br />
         <div class="flex flex-wrap -mx-3 mb-6">
           <div class="w-full px-3">
             <label
@@ -14,7 +41,7 @@
                 font-bold
                 mb-2
               "
-              for="grid-name"
+              for="name"
             >
               Name
             </label>
@@ -32,9 +59,10 @@
                 leading-tight
                 focus:outline-none focus:bg-white focus:border-gray-500
               "
-              id="grid-name"
+              id="name"
               type="text"
               placeholder="name here..."
+              v-model="form.name"
             />
           </div>
         </div>
@@ -49,7 +77,7 @@
                 font-bold
                 mb-2
               "
-              for="grid-description"
+              for="description"
             >
               Description
             </label>
@@ -69,8 +97,9 @@
                 focus:outline-none focus:bg-white focus:border-gray-500
               "
               rows="4"
-              id="grid-password"
+              id="description"
               placeholder="description here..."
+              v-model="form.description"
             ></textarea>
           </div>
         </div>
@@ -78,18 +107,26 @@
     </template>
 
     <template #footer>
-      <jet-secondary-button @click="this.$parent.$data.showModal = false">
+      <jet-secondary-button @click="$emit('closeModal')">
+        <!-- <jet-secondary-button @click="this.$parent.$data.showModal = false"> -->
         Cancel
       </jet-secondary-button>
 
-      <!-- <jet-danger-button class="ml-2" @click.native="deleteTeam" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"> -->
-      <jet-danger-button class="ml-2"> Create </jet-danger-button>
+      <jet-danger-button
+        class="ml-2"
+        :type="'submit'"
+        form="productForm"
+        :disabled="form.processing"
+      >
+        Create
+      </jet-danger-button>
     </template>
   </jet-dialog-modal>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import { useForm } from "@inertiajs/inertia-vue3";
 
 import JetApplicationLogo from "@/Jetstream/ApplicationLogo.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
@@ -105,5 +142,16 @@ export default defineComponent({
   },
 
   props: ["showModal"],
+
+  emits: ["closeModal"],
+
+  setup() {
+    const form = useForm({
+      description: null,
+      name: null,
+    });
+
+    return { form };
+  },
 });
 </script>

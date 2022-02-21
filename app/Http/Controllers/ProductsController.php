@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\Products;
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
+use Illuminate\Support\Facades\Redirect;
 
 class ProductsController extends Controller
 {
@@ -22,16 +23,6 @@ class ProductsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreProductsRequest  $request
@@ -39,7 +30,17 @@ class ProductsController extends Controller
      */
     public function store(StoreProductsRequest $request)
     {
-        //
+        try {
+            Products::create([
+                'name' => $request->name,
+                'description' => $request->description ?? 'no description'
+            ]);
+
+            // return response()->json('success!');
+            return Redirect::route('products.index');
+        } catch (\Exception $ex) {
+            return response()->json('Error adding product: ' . $ex, 500);
+        }
     }
 
     /**
@@ -71,9 +72,18 @@ class ProductsController extends Controller
      * @param  \App\Models\Products  $products
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductsRequest $request, Products $products)
+    public function update(UpdateProductsRequest $request, Products $product)
     {
-        //
+        try {
+            $product->update([
+                'name' => $request->name,
+                'description' => $request->description ?? 'no description'
+            ]);
+
+            return Redirect::route('products.index');
+        } catch (\Exception $ex) {
+            return response()->json('Error updating product: ' . $ex, 500);
+        }
     }
 
     /**
@@ -82,8 +92,14 @@ class ProductsController extends Controller
      * @param  \App\Models\Products  $products
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Products $products)
+    public function destroy(Products $product)
     {
-        //
+        try {
+            $product->delete();
+
+            return Redirect::route('products.index');
+        } catch (\Exception $ex) {
+            return response()->json('Error deleting product: ' . $ex, 500);
+        }
     }
 }
