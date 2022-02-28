@@ -1,5 +1,5 @@
 <template>
-  <jet-dialog-modal :show="showModal" @close="$emit('closeModal')">
+  <jet-dialog-modal :show="showForm" @close="$emit('closeForm')">
     <template #title> New Product </template>
     <template #content>
       <form class="w-full max-w" @submit.prevent="submit()" id="productForm">
@@ -109,7 +109,7 @@
     </template>
 
     <template #footer>
-      <jet-secondary-button @click="$emit('closeModal')">
+      <jet-secondary-button @click="$emit('closeForm')">
         Cancel
       </jet-secondary-button>
 
@@ -125,7 +125,7 @@
   </jet-dialog-modal>
 </template>
 
-<script>
+    <script>
 import { defineComponent } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 
@@ -142,9 +142,9 @@ export default defineComponent({
     JetDialogModal,
   },
 
-  props: ["showModal"],
+  props: ["showForm", "product", "verb"],
 
-  emits: ["closeModal"],
+  emits: ["closeForm"],
 
   setup() {
     const form = useForm({
@@ -155,14 +155,36 @@ export default defineComponent({
     return { form };
   },
 
+  beforeUpdate() {
+    console.log(this.verb, this.showForm, this.product);
+    this.form.clearErrors();
+    this.form.reset();
+  },
+
+  updated() {
+    this.form.success = false;
+    if (this.verb == "PUT") {
+      this.form.name = this.product.name;
+      this.form.description = this.product.description;
+    }
+  },
+
   methods: {
     submit() {
-      this.form.post("/products", {
-        onSuccess: () => {
-          this.form.success = true;
-          this.form.reset();
-        },
-      });
+      if (this.verb == "POST") {
+        this.form.post("/products", {
+          onSuccess: () => {
+            this.form.success = true;
+            this.form.reset();
+          },
+        });
+      } else if (this.verb == "PUT") {
+        this.form.put("/products/" + this.product.id, {
+          onSuccess: () => {
+            this.form.success = true;
+          },
+        });
+      }
     },
   },
 });

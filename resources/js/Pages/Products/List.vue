@@ -6,7 +6,7 @@
 
         <div class="">
           <button
-            @click="modal()"
+            @click="modalForm('POST', null)"
             class="
               bg-green-500
               hover:bg-green-400
@@ -42,7 +42,7 @@
             <td class="border px-4 py-2">{{ product.description }}</td>
             <td class="border px-4 py-2 text-center">
               <button
-                @click="modalEdit(product)"
+                @click="modalForm('PUT', product)"
                 class="
                   bg-yellow-500
                   hover:bg-yellow-400
@@ -80,9 +80,12 @@
     </div>
   </div>
 
-  <Create :showModal="showModal" @close-modal="close()"></Create>
-  <Edit :showEdit="showEdit" :product="product" @close-edit="closeEdit()">
-  </Edit>
+  <Form
+    :showForm="showForm"
+    :verb="verb"
+    :product="product"
+    @close-form="closeForm()"
+  ></Form>
 </template>
 
 <script>
@@ -99,6 +102,7 @@ import JetDangerButton from "@/Jetstream/SecondaryButton.vue";
 
 import Create from "@/Pages/Products/Create";
 import Edit from "@/Pages/Products/Edit";
+import Form from "@/Pages/Products/Form";
 
 export default defineComponent({
   components: {
@@ -110,13 +114,16 @@ export default defineComponent({
     PencilIcon,
     Create,
     Edit,
+    Form,
   },
 
   data() {
     return {
+      showForm: false,
       showModal: false,
       showEdit: false,
       product: null,
+      verb: null,
     };
   },
 
@@ -124,15 +131,23 @@ export default defineComponent({
     modal() {
       this.showModal = true;
     },
+    modalEdit(product) {
+      this.product = product;
+      this.showEdit = true;
+    },
+    modalForm(verb, product) {
+      this.product = product;
+      this.showForm = true;
+      this.verb = verb;
+    },
     close() {
       this.showModal = false;
     },
     closeEdit() {
       this.showEdit = false;
     },
-    modalEdit(product) {
-      this.product = product;
-      this.showEdit = true;
+    closeForm() {
+      this.showForm = false;
     },
     deleteProduct(id) {
       Inertia.delete(`/products/` + id, {
