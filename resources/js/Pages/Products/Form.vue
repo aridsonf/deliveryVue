@@ -1,12 +1,9 @@
 <template>
-  <jet-dialog-modal :show="showModal" @close="$emit('closeModal')">
-    <template #title> New Product </template>
+  <jet-dialog-modal :show="showForm" @close="$emit('closeForm')">
+    <template #title v-if="verb == 'POST'"> New Product </template>
+    <template #title v-else-if="verb == 'PUT'"> Edit Product </template>
     <template #content>
-      <form
-        class="w-full max-w"
-        @submit.prevent="form.post('/products')"
-        id="productForm"
-      >
+      <form class="w-full max-w" @submit.prevent="submit()" id="productForm">
         <div role="alert" v-if="form.hasErrors">
           <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
             Error
@@ -21,12 +18,13 @@
               text-red-700
             "
           >
-            <div v-if="form.errors.name">
-              <p>{{ form.errors.name }}</p>
-            </div>
-            <div v-if="form.errors.description">
-              <p>{{ form.errors.description }}</p>
-            </div>
+            <ul
+              class="list-disc px-3"
+              v-for="error in form.errors"
+              :key="error"
+            >
+              <li>{{ error }}</li>
+            </ul>
           </div>
         </div>
         <br />
@@ -104,11 +102,16 @@
           </div>
         </div>
       </form>
+      <div role="alert" v-if="form.success">
+        <div class="bg-green-500 text-white font-bold rounded-t px-4 py-2">
+          <p v-if="verb == 'POST'">Successfully created!</p>
+          <p v-else-if="verb == 'PUT'">Successfully updated!</p>
+        </div>
+      </div>
     </template>
 
     <template #footer>
-      <jet-secondary-button @click="$emit('closeModal')">
-        <!-- <jet-secondary-button @click="this.$parent.$data.showModal = false"> -->
+      <jet-secondary-button @click="$emit('closeForm')">
         Cancel
       </jet-secondary-button>
 
@@ -118,13 +121,14 @@
         form="productForm"
         :disabled="form.processing"
       >
-        Create
+        <p v-if="verb == 'POST'">Create</p>
+        <p v-else-if="verb == 'PUT'">Update</p>
       </jet-danger-button>
     </template>
   </jet-dialog-modal>
 </template>
 
-<script>
+    <script>
 import { defineComponent } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 
@@ -141,9 +145,9 @@ export default defineComponent({
     JetDialogModal,
   },
 
-  props: ["showModal"],
+  props: ["showForm", "product", "verb"],
 
-  emits: ["closeModal"],
+  emits: ["closeForm"],
 
   setup() {
     const form = useForm({
@@ -152,6 +156,45 @@ export default defineComponent({
     });
 
     return { form };
+  },
+
+  beforeUpdate() {
+    console.log(this.verb, this.showForm, this.product);
+    this.form.clearErrors();
+  },
+
+  updated() {
+    this.form.success = false;
+    this.form.reset();
+    if (this.verb == "PUT") {
+      this.form.name = this.product.name;
+      this.form.description = this.product.description;
+    }
+  },
+
+  methods: {
+    submit() {
+      if (this.verb == "POST") {
+        this.form.post("/products", {
+          onSuccess: () => {
+            this.form.success = true;
+            this.form.reset();
+          },
+          onError: () => {
+            this.form.success = false;
+          },
+        });
+      } else if (this.verb == "PUT") {
+        this.form.put("/products/" + this.product.id, {
+          onSuccess: () => {
+            this.form.success = true;
+          },
+          onError: () => {
+            this.form.success = false;
+          },
+        });
+      }
+    },
   },
 });
 </script>

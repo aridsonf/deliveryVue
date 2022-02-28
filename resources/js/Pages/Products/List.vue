@@ -6,7 +6,7 @@
 
         <div class="">
           <button
-            @click="modal()"
+            @click="modalForm('POST', null)"
             class="
               bg-green-500
               hover:bg-green-400
@@ -42,6 +42,7 @@
             <td class="border px-4 py-2">{{ product.description }}</td>
             <td class="border px-4 py-2 text-center">
               <button
+                @click="modalForm('PUT', product)"
                 class="
                   bg-yellow-500
                   hover:bg-yellow-400
@@ -79,12 +80,18 @@
     </div>
   </div>
 
-  <Create :showModal="showModal" @close-modal="close()"></Create>
+  <Form
+    :showForm="showForm"
+    :verb="verb"
+    :product="product"
+    @close-form="closeForm()"
+  ></Form>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import { Inertia } from "@inertiajs/inertia";
+
 import { PlusIcon } from "@heroicons/vue/solid";
 import { TrashIcon } from "@heroicons/vue/solid";
 import { PencilIcon } from "@heroicons/vue/solid";
@@ -93,7 +100,7 @@ import JetApplicationLogo from "@/Jetstream/ApplicationLogo.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 import JetDangerButton from "@/Jetstream/SecondaryButton.vue";
 
-import Create from "@/Pages/Products/Create";
+import Form from "@/Pages/Products/Form";
 
 export default defineComponent({
   components: {
@@ -103,25 +110,30 @@ export default defineComponent({
     PlusIcon,
     TrashIcon,
     PencilIcon,
-    Create,
+    Form,
   },
 
   data() {
     return {
-      showModal: false,
+      showForm: false,
+      product: null,
+      verb: null,
     };
   },
 
   methods: {
-    modal() {
-      this.showModal = true;
+    modalForm(verb, product) {
+      this.product = product;
+      this.showForm = true;
+      this.verb = verb;
     },
-    close() {
-      this.showModal = false;
+    closeForm() {
+      this.showForm = false;
     },
     deleteProduct(id) {
       Inertia.delete(`/products/` + id, {
-        onBefore: () => confirm("Are you sure you want to delete this user?"),
+        onBefore: () =>
+          confirm("Are you sure you want to delete this product?"),
       });
     },
   },
