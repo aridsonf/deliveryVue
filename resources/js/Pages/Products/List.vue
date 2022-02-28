@@ -100,8 +100,6 @@ import JetApplicationLogo from "@/Jetstream/ApplicationLogo.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
 import JetDangerButton from "@/Jetstream/SecondaryButton.vue";
 
-import Create from "@/Pages/Products/Create";
-import Edit from "@/Pages/Products/Edit";
 import Form from "@/Pages/Products/Form";
 
 export default defineComponent({
@@ -112,39 +110,22 @@ export default defineComponent({
     PlusIcon,
     TrashIcon,
     PencilIcon,
-    Create,
-    Edit,
     Form,
   },
 
   data() {
     return {
       showForm: false,
-      showModal: false,
-      showEdit: false,
       product: null,
       verb: null,
     };
   },
 
   methods: {
-    modal() {
-      this.showModal = true;
-    },
-    modalEdit(product) {
-      this.product = product;
-      this.showEdit = true;
-    },
     modalForm(verb, product) {
       this.product = product;
       this.showForm = true;
       this.verb = verb;
-    },
-    close() {
-      this.showModal = false;
-    },
-    closeEdit() {
-      this.showEdit = false;
     },
     closeForm() {
       this.showForm = false;

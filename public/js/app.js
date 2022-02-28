@@ -20834,11 +20834,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @heroicons/vue/solid */ "./node_modules/@heroicons/vue/solid/esm/index.js");
 /* harmony import */ var _Jetstream_ApplicationLogo_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/ApplicationLogo.vue */ "./resources/js/Jetstream/ApplicationLogo.vue");
 /* harmony import */ var _Jetstream_SecondaryButton_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Jetstream/SecondaryButton.vue */ "./resources/js/Jetstream/SecondaryButton.vue");
-Object(function webpackMissingModule() { var e = new Error("Cannot find module '@/Pages/Products/Create'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-Object(function webpackMissingModule() { var e = new Error("Cannot find module '@/Pages/Products/Edit'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-/* harmony import */ var _Pages_Products_Form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Pages/Products/Form */ "./resources/js/Pages/Products/Form.vue");
-
-
+/* harmony import */ var _Pages_Products_Form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Pages/Products/Form */ "./resources/js/Pages/Products/Form.vue");
 
 
 
@@ -20856,37 +20852,20 @@ Object(function webpackMissingModule() { var e = new Error("Cannot find module '
     PlusIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_2__.PlusIcon,
     TrashIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_2__.TrashIcon,
     PencilIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_2__.PencilIcon,
-    Create: Object(function webpackMissingModule() { var e = new Error("Cannot find module '@/Pages/Products/Create'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()),
-    Edit: Object(function webpackMissingModule() { var e = new Error("Cannot find module '@/Pages/Products/Edit'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()),
-    Form: _Pages_Products_Form__WEBPACK_IMPORTED_MODULE_6__["default"]
+    Form: _Pages_Products_Form__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: function data() {
     return {
       showForm: false,
-      showModal: false,
-      showEdit: false,
       product: null,
       verb: null
     };
   },
   methods: {
-    modal: function modal() {
-      this.showModal = true;
-    },
-    modalEdit: function modalEdit(product) {
-      this.product = product;
-      this.showEdit = true;
-    },
     modalForm: function modalForm(verb, product) {
       this.product = product;
       this.showForm = true;
       this.verb = verb;
-    },
-    close: function close() {
-      this.showModal = false;
-    },
-    closeEdit: function closeEdit() {
-      this.showEdit = false;
     },
     closeForm: function closeForm() {
       this.showForm = false;
