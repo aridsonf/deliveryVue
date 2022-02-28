@@ -17,12 +17,13 @@
               text-red-700
             "
           >
-            <div v-if="form.errors.name">
-              <p>{{ form.errors.name }}</p>
-            </div>
-            <div v-if="form.errors.description">
-              <p>{{ form.errors.description }}</p>
-            </div>
+            <ul
+              class="list-disc px-3"
+              v-for="error in form.errors"
+              :key="error"
+            >
+              <li>{{ error }}</li>
+            </ul>
           </div>
         </div>
         <br />
@@ -100,6 +101,11 @@
           </div>
         </div>
       </form>
+      <div role="alert" v-if="form.success">
+        <div class="bg-green-500 text-white font-bold rounded-t px-4 py-2">
+          Update success!
+        </div>
+      </div>
     </template>
 
     <template #footer>
@@ -144,6 +150,7 @@ export default defineComponent({
     const form = useForm({
       name: null,
       description: null,
+      success: false,
     });
 
     return { form };
@@ -156,7 +163,11 @@ export default defineComponent({
 
   methods: {
     submit() {
-      this.form.put("/products/" + this.product.id);
+      this.form.put("/products/" + this.product.id, {
+        onSuccess: () => {
+          this.form.success = true;
+        },
+      });
     },
   },
 });
