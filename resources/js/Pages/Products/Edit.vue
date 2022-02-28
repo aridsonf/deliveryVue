@@ -1,53 +1,122 @@
 <template>
   <jet-dialog-modal :show="showEdit" @close="$emit('closeEdit')">
-        <template #title> Edit Product </template>
-        <template #content>
-            <form class="w-full max-w" @submit.prevent="submit" id="productForm">
-                <div role="alert" v-if="form.hasErrors">
-                    <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                        Error
-                    </div>
-                    <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                        <div v-if="form.errors.name">
-                            <p>{{ form.errors.name }}</p>
-                        </div>
-                        <div v-if="form.errors.description">
-                            <p>{{ form.errors.description }}</p>
-                        </div>
-                    </div>
-                </div>
-                <br />
-                <div class="flex flex-wrap -mx-3 mb-6">
-                    <div class="w-full px-3">
-                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
-                        Name
-                        </label>
-                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                        id="name" type="text" placeholder="name here..." v-model="name"/>
-                    </div>
-                </div>
-                <div class="flex flex-wrap -mx-3 mb-6">
-                    <div class="w-full px-3">
-                        <label class=" block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="description">
-                        Description
-                        </label>
-                        <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                        rows="4" id="description" placeholder="description here..." v-model="description"></textarea>
-                    </div>
-                </div>
-            </form>
-        </template>
+    <template #title> Edit Product </template>
+    <template #content>
+      <form class="w-full max-w" @submit.prevent="submit()" id="productForm">
+        <div role="alert" v-if="form.hasErrors">
+          <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+            Error
+          </div>
+          <div
+            class="
+              border border-t-0 border-red-400
+              rounded-b
+              bg-red-100
+              px-4
+              py-3
+              text-red-700
+            "
+          >
+            <div v-if="form.errors.name">
+              <p>{{ form.errors.name }}</p>
+            </div>
+            <div v-if="form.errors.description">
+              <p>{{ form.errors.description }}</p>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="flex flex-wrap -mx-3 mb-6">
+          <div class="w-full px-3">
+            <label
+              class="
+                block
+                uppercase
+                tracking-wide
+                text-gray-700 text-xs
+                font-bold
+                mb-2
+              "
+              for="name"
+            >
+              Name
+            </label>
+            <input
+              class="
+                appearance-none
+                block
+                w-full
+                bg-gray-200
+                text-gray-700
+                border border-gray-200
+                rounded
+                py-3
+                px-2
+                leading-tight
+                focus:outline-none focus:bg-white focus:border-gray-500
+              "
+              id="name"
+              type="text"
+              placeholder="name here..."
+              v-model="form.name"
+            />
+          </div>
+        </div>
+        <div class="flex flex-wrap -mx-3 mb-6">
+          <div class="w-full px-3">
+            <label
+              class="
+                block
+                uppercase
+                tracking-wide
+                text-gray-700 text-xs
+                font-bold
+                mb-2
+              "
+              for="description"
+            >
+              Description
+            </label>
+            <textarea
+              class="
+                appearance-none
+                block
+                w-full
+                bg-gray-200
+                text-gray-700
+                border border-gray-200
+                rounded
+                py-3
+                px-4
+                mb-3
+                leading-tight
+                focus:outline-none focus:bg-white focus:border-gray-500
+              "
+              rows="4"
+              id="description"
+              placeholder="description here..."
+              v-model="form.description"
+            ></textarea>
+          </div>
+        </div>
+      </form>
+    </template>
 
-        <template #footer>
-            <jet-secondary-button @click="$emit('closeEdit')">
-                Cancel
-            </jet-secondary-button>
+    <template #footer>
+      <jet-secondary-button @click="$emit('closeEdit')">
+        Cancel
+      </jet-secondary-button>
 
-            <jet-danger-button class="ml-2" :type="'submit'" form="productForm" :disabled="form.processing">
-                Create
-            </jet-danger-button>        
-        </template>
-    </jet-dialog-modal>
+      <jet-danger-button
+        class="ml-2"
+        :type="'submit'"
+        form="productForm"
+        :disabled="form.processing"
+      >
+        Update
+      </jet-danger-button>
+    </template>
+  </jet-dialog-modal>
 </template>
 
 <script>
@@ -60,39 +129,35 @@ import JetDangerButton from "@/Jetstream/SecondaryButton.vue";
 import JetDialogModal from "@/Jetstream/DialogModal.vue";
 
 export default defineComponent({
-    components: {
-        JetApplicationLogo,
-        JetSecondaryButton,
-        JetDangerButton,
-        JetDialogModal,
+  components: {
+    JetApplicationLogo,
+    JetSecondaryButton,
+    JetDangerButton,
+    JetDialogModal,
+  },
+
+  props: ["showEdit", "product"],
+
+  emits: ["closeEdit"],
+
+  setup() {
+    const form = useForm({
+      name: null,
+      description: null,
+    });
+
+    return { form };
+  },
+
+  updated() {
+    this.form.name = this.product.name;
+    this.form.description = this.product.description;
+  },
+
+  methods: {
+    submit() {
+      this.form.put("/products/" + this.product.id);
     },
-
-    props: ["showEdit", "id", "name", "description"],
-
-    emits: ["closeEdit"],
-
-    data() {
-        return {
-            name: this.name,
-            description: this.description
-        };
-    },
-
-    setup() {
-        const form = useForm({
-            description: null,
-            name: null,
-        });
-
-        return { form };
-    },
-
-    methods: {
-        submit() {
-            form.name = this.name;
-            form.description = this.description;
-            form.put('/products/'+id);
-        }
-    }
+  },
 });
 </script>
