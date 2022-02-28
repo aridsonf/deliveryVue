@@ -42,7 +42,7 @@
             <td class="border px-4 py-2">{{ product.description }}</td>
             <td class="border px-4 py-2 text-center">
               <button
-                @click="modalEdit(product.id, product.name, product.description)"
+                @click="modalEdit(product)"
                 class="
                   bg-yellow-500
                   hover:bg-yellow-400
@@ -81,12 +81,7 @@
   </div>
 
   <Create :showModal="showModal" @close-modal="close()"></Create>
-  <Edit 
-    :showEdit="showEdit" 
-    :id="id" 
-    :name="name" 
-    :description="description" 
-    @close-edit="closeEdit()">
+  <Edit :showEdit="showEdit" :product="product" @close-edit="closeEdit()">
   </Edit>
 </template>
 
@@ -114,16 +109,14 @@ export default defineComponent({
     TrashIcon,
     PencilIcon,
     Create,
-    Edit
+    Edit,
   },
 
   data() {
     return {
       showModal: false,
       showEdit: false,
-      id: null,
-      name: null,
-      description: null
+      product: null,
     };
   },
 
@@ -137,15 +130,14 @@ export default defineComponent({
     closeEdit() {
       this.showEdit = false;
     },
-    modalEdit(id, name, description){
-      this.id = id
-      this.name = name,
-      this.description = description
+    modalEdit(product) {
+      this.product = product;
       this.showEdit = true;
     },
     deleteProduct(id) {
       Inertia.delete(`/products/` + id, {
-        onBefore: () => confirm("Are you sure you want to delete this product?"),
+        onBefore: () =>
+          confirm("Are you sure you want to delete this product?"),
       });
     },
   },
