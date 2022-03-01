@@ -27,6 +27,27 @@
       </div>
 
       <div class="p-6 text-center">
+        <a
+          href="/stocks"
+          class="
+            inline-flex
+            items-center
+            bg-blue-500
+            hover:bg-blue-400
+            text-white
+            font-bold
+            py-2
+            px-4
+            border-b-4 border-blue-700
+            hover:border-blue-500
+            rounded
+          "
+        >
+          <CubeIcon class="h-5 w-5 text-dark-500" />&nbsp;Stocks
+        </a>
+      </div>
+
+      <div class="p-6 text-center">
         <button
           class="
             inline-flex
@@ -51,7 +72,11 @@
 
 <script>
 import { defineComponent } from "vue";
-import { CollectionIcon, ShoppingCartIcon } from "@heroicons/vue/solid";
+import {
+  CollectionIcon,
+  ShoppingCartIcon,
+  CubeIcon,
+} from "@heroicons/vue/solid";
 import JetApplicationLogo from "@/Jetstream/ApplicationLogo.vue";
 // import Button from '@/Jetstream/Button.vue'
 
@@ -61,6 +86,7 @@ export default defineComponent({
     // Button,
     CollectionIcon,
     ShoppingCartIcon,
+    CubeIcon,
   },
 
   props: ["user"],

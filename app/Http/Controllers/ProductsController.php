@@ -17,9 +17,13 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Products::all();
+        try {
+            $products = Products::all();
 
-        return Inertia::render('Products/Index', compact('products'));
+            return Inertia::render('Products/Index', compact('products'));
+        } catch (\Exception $ex) {
+            return response()->json('Error listing product: ' . $ex, 500);
+        }
     }
 
     /**
@@ -36,33 +40,10 @@ class ProductsController extends Controller
                 'description' => $request->description ?? 'no description'
             ]);
 
-            // return response()->json('success!');
             return Redirect::route('products.index');
         } catch (\Exception $ex) {
             return response()->json('Error adding product: ' . $ex, 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Products  $products
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Products $products)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Products  $products
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Products $products)
-    {
-        //
     }
 
     /**
