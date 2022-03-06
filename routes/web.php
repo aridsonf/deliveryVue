@@ -5,7 +5,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\{
-    ProductsController
+    ProductsController,
+    StockController
 };
 
 /*
@@ -34,4 +35,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::resources([
     'products' => ProductsController::class,
+    'stocks' => StockController::class
 ]);
