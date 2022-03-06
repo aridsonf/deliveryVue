@@ -101,7 +101,7 @@ class StockController extends Controller
         try {
             $stock->update([
                 'fk_product' => $request->fk_product,
-                'inbound' => $request->inbound,
+                'balance' => $request->inbound,
                 'validate_date' => $request->validate_date,
                 'value' => $request->value,
             ]);

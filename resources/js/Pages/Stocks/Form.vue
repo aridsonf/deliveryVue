@@ -141,6 +141,7 @@
               "
               type="number"
               min="0"
+              :max="limit"
               id="inbound"
               placeholder="Stock quantity here..."
               v-model="form.inbound"
@@ -235,6 +236,7 @@ export default defineComponent({
   data() {
     return {
       products: null,
+      limit: null,
     };
   },
 
@@ -266,7 +268,8 @@ export default defineComponent({
     if (this.verb == "PUT") {
       this.form.fk_product = this.stock.fk_product;
       this.form.validate_date = this.stock.validate_date;
-      this.form.inbound = this.stock.inbound;
+      this.limit = this.stock.inbound;
+      this.form.inbound = this.stock.balance;
       this.form.value = this.stock.value;
     }
   },
